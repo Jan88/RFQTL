@@ -47,8 +47,6 @@
 #' A matrix containing null distribution of importance scores
 #' generated through permutations.
 #'
-#' @format 
-#' 
 #' @source unpublished data.
 "perm1"
 
@@ -58,8 +56,6 @@
 #' A matrix containing null distribution of importance scores
 #' generated through permutations.
 #'
-#' @format 
-#' 
 #' @source unpublished data.
 "perm2"
 

@@ -16,7 +16,7 @@
 #' are reordered according to the same sample order.
 #' 
 #' @param genotype A binary matrix with strain (rows) X marker (columns)
-#'  entries. Do not include markers with MAF=0.
+#'  entries. Do not include markers with MAF=1.
 #' @param maxNAs Maximum number of missing values that are allowed for
 #'  any marker. If this limit is exceeded, the marker is excluded 
 #'  from the genotype matrix.
@@ -33,11 +33,12 @@
 #'  markers, the mapping-covariates and the phenotype.
 #' @export
 #'
-#' @examples
 preMap <- function(genotype, maxNAs=floor(nrow(genotype)*0.5), propVar=0.75, phenotype, sampleInfo, scale=T){
    
    ###check input
-   
+   if(any(!is.matrix(genotype),!is.integer(genotype),genotype!=0&genotype!=1,na.rm = T)){
+      stop("Genotype has to be a matrix containing integers (0/1)")
+   }
    if(length(unique(sampleInfo))<nrow(genotype)){
       stop("Don't include genotype-data for strains for which no trait data is supplied. Details can be found in the manual.")
    }
@@ -151,7 +152,7 @@ preMap <- function(genotype, maxNAs=floor(nrow(genotype)*0.5), propVar=0.75, phe
 #'  indices of any missing values for the respective samples.
 #' @export
 #'
-#' @examples
+
 extractNAs <- function(genotype){
    lapply(1:ncol(genotype),FUN=function(m){
      out <- which(is.na(genotype[,m]))
@@ -175,7 +176,7 @@ extractNAs <- function(genotype){
 #'  frequencies in the input (NAlist).
 #' @export
 #'
-#' @examples
+
 replaceGenoNAs <- function(genotype,NAlist){
    sapply(1:ncol(genotype),FUN=function(x){ #per predictor
       lNA <- length(NAlist[[x]])
@@ -207,7 +208,7 @@ replaceGenoNAs <- function(genotype,NAlist){
 #'  a marker-specific bias.
 #' @export
 #'
-#' @examples
+
 cScore <- function(rf=NULL,predictorsOfInterest=NULL,normalize=TRUE){
    if(class(rf)!="randomForest"){
       stop("A randomForest object is required as input!")
@@ -254,7 +255,7 @@ cScore <- function(rf=NULL,predictorsOfInterest=NULL,normalize=TRUE){
 #' @return Permuted order of individuals.
 #' @export
 #'
-#' @examples
+
 pscheme <- function(permutationGroups){
    
    permutationGroups <- sapply(permutationGroups,FUN=function(pG){
@@ -308,7 +309,7 @@ pscheme <- function(permutationGroups){
 #'  traits: a matrix of scores with one column per permutation
 #' @export
 #'
-#' @examples
+
 rfMapper <- function(mappingData, nTrait=NULL, permutationGroups=NULL, permute, nPermutations=1000, nforest, ntree, file=NULL, nCl=1, clType="SOCK", pMat=NULL){
    if(!is.logical(permute)){
       stop("permute has to be TRUE or FALSE.")
@@ -387,7 +388,7 @@ rfMapper <- function(mappingData, nTrait=NULL, permutationGroups=NULL, permute, 
 #' @return A matrix of scores with one column per permutation.
 #' @export
 #'
-#' @examples
+
 rfMapperPar <- function(mappingData, nTrait=NULL, permutationGroups=NULL, 
                         file=NULL, permute=T, nPermutations=1000, nforest,
                         ntree, pMat=NULL, nCl, clType="SOCK"){
@@ -421,17 +422,7 @@ rfMapperPar <- function(mappingData, nTrait=NULL, permutationGroups=NULL,
       missing <- which(is.na(phenotype))
       phenotype <- phenotype[-missing]
       genotype <- genotype[-missing,]
-      NAlist <- lapply(NAlist,FUN=function(markerVec){
-         aFreq <- markerVec[1]
-         markerVec <- markerVec[-1]
-         if(length(markerVec)==0){
-            return(aFreq)
-         }
-         markerVec <- sapply(markerVec,FUN=function(sampleInd){
-            sampleInd-sum(sampleInd>missing)
-         })
-         return(c(aFreq,markerVec))
-      })
+      NAlist <- lapply(NAlist,FUN=updateNAs,missing=missing)
       permutationGroups <- permutationGroups[-missing]
    }
    
@@ -469,17 +460,7 @@ rfMapperPar <- function(mappingData, nTrait=NULL, permutationGroups=NULL,
          missing <- which(is.na(phenotype))
          phenotype <- phenotype[-missing]
          permGenotype <- permGenotype[-missing,]
-         NAlist <- lapply(NAlist,FUN=function(markerVec){
-            aFreq <- markerVec[1]
-            markerVec <- markerVec[-1]
-            if(length(markerVec)==0){
-               return(aFreq)
-            }
-            markerVec <- sapply(markerVec,FUN=function(sampleInd){
-               sampleInd-sum(sampleInd>missing)
-            })
-            return(c(aFreq,markerVec))
-         })
+         NAlist <- lapply(NAlist,FUN=updateNAs,missing=missing)
       }
       rfs <- lapply(1:nforest,FUN=function(nF){
          permGenotype[,-exclude] <- replaceGenoNAs(genotype=permGenotype[,-exclude],NAlist=NAlist)
@@ -531,7 +512,7 @@ rfMapperPar <- function(mappingData, nTrait=NULL, permutationGroups=NULL,
 #'  not including covariates.
 #' @export
 #'
-#' @examples
+
 rfMapperNonPar <- function(mappingData, nTrait=NULL, permutationGroups=NULL,
                            permute, nPermutations=1000, nforest, ntree, 
                            file=NULL, pMat=NULL){
@@ -563,17 +544,7 @@ rfMapperNonPar <- function(mappingData, nTrait=NULL, permutationGroups=NULL,
       missing <- which(is.na(phenotype))
       phenotype <- phenotype[-missing]
       genotype <- genotype[-missing,]
-      NAlist <- lapply(NAlist,FUN=function(markerVec){
-         aFreq <- markerVec[1]
-         markerVec <- markerVec[-1]
-         if(length(markerVec)==0){
-            return(aFreq)
-         }
-         markerVec <- sapply(markerVec,FUN=function(sampleInd){
-            sampleInd-sum(sampleInd>missing)
-         })
-         return(c(aFreq,markerVec))
-      })
+      NAlist <- lapply(NAlist,FUN=updateNAs,missing=missing)
       permutationGroups <- permutationGroups[-missing]
    }
    if(permute){ #do permutations
@@ -590,17 +561,7 @@ rfMapperNonPar <- function(mappingData, nTrait=NULL, permutationGroups=NULL,
             missing <- which(is.na(phenotype))
             phenotype <- phenotype[-missing]
             permGenotype <- permGenotype[-missing,]
-            NAlist <- lapply(NAlist,FUN=function(markerVec){
-               aFreq <- markerVec[1]
-               markerVec <- markerVec[-1]
-               if(length(markerVec)==0){
-                  return(aFreq)
-               }
-               markerVec <- sapply(markerVec,FUN=function(sampleInd){
-                  sampleInd-sum(sampleInd>missing)
-               })
-               return(c(aFreq,markerVec))
-            })
+            NAlist <- lapply(NAlist,FUN=updateNAs,missing=missing)
          }
          rfs <- lapply(1:nforest,FUN=function(nF){
             permGenotype[,-exclude] <- replaceGenoNAs(genotype=permGenotype[,-exclude],NAlist=NAlist)
@@ -642,7 +603,7 @@ rfMapperNonPar <- function(mappingData, nTrait=NULL, permutationGroups=NULL,
 #'  contains the target and a matrix with the start and end of the QTL-regions.
 #' @export
 #'
-#' @examples
+
 joinConsecutive <- function(QTLmat, chrVec){
    
    #identify traits with at least one qtl
@@ -697,7 +658,7 @@ joinConsecutive <- function(QTLmat, chrVec){
 #'  QTL regions after combining close and correlated QTL.
 #' @export
 #'
-#' @examples
+
 joinNear <- function(QTLlist, corMat, corThreshold, distThreshold, chrVec){
    
    out <- lapply(QTLlist,FUN=function(targetList){
@@ -748,7 +709,7 @@ joinNear <- function(QTLlist, corMat, corThreshold, distThreshold, chrVec){
 #'  grouping highly correlated distant QTL.
 #' @export
 #'
-#' @examples
+
 joinCorrelated <- function(QTLlist, corMat, corThreshold){
    
    out <- lapply(QTLlist,FUN=function(targetList){
@@ -807,7 +768,7 @@ joinCorrelated <- function(QTLlist, corMat, corThreshold){
 #' @return A matrix with empirical p-values is returned.
 #' @export
 #'
-#' @examples
+
 pEst <- function(path,markersPerIteration,scores,printProg=T,pCorrection="none"){
    
    #if scores is a vector (i.e. only one trait), it is transformed into a matrix
@@ -905,7 +866,7 @@ pEst <- function(path,markersPerIteration,scores,printProg=T,pCorrection="none")
 #'  and a matrix with the QTL-regions involved.
 #' @export
 #'
-#' @examples
+
 QTLgrouper <- function(pmat, sigThreshold, corThreshold, 
                        distThreshold, genotype, chrVec){
    
@@ -955,7 +916,7 @@ QTLgrouper <- function(pmat, sigThreshold, corThreshold,
 #'  significant predictor in each QTL.
 #' @export
 #'
-#' @examples
+
 minPV <- function(QTLlist,pmat){
    out <- lapply(QTLlist,FUN=function(qtl){
       target <- qtl$target
@@ -972,6 +933,46 @@ minPV <- function(QTLlist,pmat){
    })
    return(out)
 }
+
+#' @title Update missing values
+#' 
+#' @description
+#' Adjust the indices of missing genotypes for missing phenotypes.
+#'
+#' @param markerVec Vector of indices of strains with missing information for
+#'  the current marker.
+#' @param missing Vector of indices of strains with missing information for
+#'  the current trait.
+#'
+#' @return A list object of vectors containing the updated indices of strains
+#' that miss the information for the current marker.
+#' @export
+#'
+
+# updateNAs <- function(markerVec,missing){
+#   aFreq <- markerVec[1]
+#   markerVec <- markerVec[-1]
+#   if(length(markerVec)==0){
+#     return(aFreq)
+#   }
+#   markerVec <- sapply(markerVec,FUN=function(sampleInd){
+#     sampleInd-sum(sampleInd>missing)
+#   })
+#   return(c(aFreq,markerVec))
+# }
+updateNAs <- function(markerVec,missing){
+  if(length(markerVec)>0){
+    markerVec <- setdiff(markerVec,missing) #If the strains with missing
+    #genotypes also have missing phenotypes, they should be removed completely.
+    markerVec <- sapply(markerVec,FUN=function(sampleInd){
+      sampleInd-sum(sampleInd>missing)
+    })
+  }
+  return(markerVec)
+}
+
+
+
 
 #' @title Write .qtl file
 #' 
@@ -991,7 +992,7 @@ minPV <- function(QTLlist,pmat){
 #' @return The output is written in a file, specified by path.
 #' @export
 #'
-#' @examples
+
 writeQTL <- function(QTLlist,traitNames=NULL,path,
                      markerPositions=NULL,digits=NULL){
    if(identical(QTLlist,"no significant loci")){
@@ -1063,7 +1064,7 @@ writeQTL <- function(QTLlist,traitNames=NULL,path,
 #' @return A list-object as it is returned by QTLgrouper.
 #' @export
 #'
-#' @examples
+
 readQTL <- function(path){
    if(!is.character(path)|!grepl(".qtl",path)){
       stop("Specify a .qtl file.")
@@ -1189,7 +1190,7 @@ emma.kinship <- function(snps, method="additive", use="all") {
 #'  frequencies, and ungrouped p-values.
 #' @export
 #'
-#' @examples
+
 RFepistasis <- function(mappingData, 
                         markerInds1 = NULL, markerInds2 = NULL, pairMat = NULL, 
                         mtry = NULL, ntree = 30000, npermut = 100,
@@ -1548,7 +1549,6 @@ RFepistasis <- function(mappingData,
 #'  column two were used somewhere on the right side of the predictors in column 1.
 #' @export
 #'
-#' @examples
 treeStructure <- function(treeMat){
    rownames(treeMat)=1:nrow(treeMat)
    treeMat <- treeMat[treeMat[,3] == -3,, drop = F] # get only nodes which have children
@@ -1599,7 +1599,6 @@ treeStructure <- function(treeMat){
 #' @return Combined p-value.
 #' @export
 #'
-#' @examples
 combinePvalues <- function(p){
    if(!is.numeric(p) | length(p)<1){
       stop("p has to be a numeric vector.")
@@ -1630,7 +1629,6 @@ combinePvalues <- function(p){
 #' @return An object of class randomForest.
 #' @export
 #'
-#' @examples
 combineForestsExtended = function (...) {
    pad0 <- function(x, len) c(x, rep(0, len - length(x)))
    padm0 <- function(x, len) rbind(x, matrix(0, nrow = len - 

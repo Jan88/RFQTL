@@ -26,9 +26,4 @@ The output consists of a numeric vector containing a score
 }
 \description{
 Extracts a combined importance score from a randomForest object.
-The \code{cScore} is the product of PI (permutation importance) and
-RSS (average increase in node purity of a predictor). Negative 
-importance measures are set to 0. Optionally, PI and RSS are 
-divided by the trait variance to normalize the scores across
-different traits (recommended).
 }

@@ -8,10 +8,8 @@ pEst(path, markersPerIteration, scores, printProg = T, pCorrection = "none")
 }
 \arguments{
 \item{path}{File path where the .RData files with the matrices of 
-empirical values can be found. These have to conform to predictors 
-(rows) X permutations (columns). Permutations for multiple traits 
-can be used for the p-value estimation, since the cScores are
- normalized across traits.}
+empirical values can be found. Thse have to conform to predictors 
+(rows) X permutations (columns).}
 
 \item{markersPerIteration}{Total number of null distributions that 
 are loaded at the same time. The possible number is dependent on 

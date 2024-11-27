@@ -4,9 +4,11 @@
 \name{RFQTLphenotype}
 \alias{RFQTLphenotype}
 \title{Fission yeast phenotypes}
-\format{A matrix with 46 rows and 2 columns: Each 
+\format{
+A matrix with 46 rows and 2 columns: Each 
 row corresponds to a strain, and each column to 
-a phenotype.}
+a phenotype.
+}
 \source{
 unpublished data.
 }

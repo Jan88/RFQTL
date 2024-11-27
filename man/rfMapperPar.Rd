@@ -4,9 +4,19 @@
 \alias{rfMapperPar}
 \title{Parallel RF mapping}
 \usage{
-rfMapperPar(mappingData, nTrait = NULL, permutationGroups = NULL,
-  file = NULL, permute = T, nPermutations = 1000, nforest, ntree,
-  pMat = NULL, nCl, clType = "SOCK")
+rfMapperPar(
+  mappingData,
+  nTrait = NULL,
+  permutationGroups = NULL,
+  file = NULL,
+  permute = T,
+  nPermutations = 1000,
+  nforest,
+  ntree,
+  pMat = NULL,
+  nCl,
+  clType = "SOCK"
+)
 }
 \arguments{
 \item{mappingData}{A list containing all necessary information to 

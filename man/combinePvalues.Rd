@@ -13,12 +13,8 @@ combinePvalues(p)
 Combined p-value.
 }
 \description{
-Function that combines p-values using the fisher method. 
+Ffunction that combines p-values using the fisher method. 
 Ignores NA in the input. Returns NA is no valid p-values were
 in the input (e.g., only NAs). If only one valid p-value is
-submitted, this p-value is returned unchanged. Used in \code{RFepistasis}.
-}
-\examples{
-p = c(0.01,0.4,0.02,NA)
-combinePvalues(p)
+submitted, this p-value is returned unchanged. Used in RFepistasis.
 }

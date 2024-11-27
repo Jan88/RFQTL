@@ -4,8 +4,14 @@
 \alias{preMap}
 \title{Prepare mapping data}
 \usage{
-preMap(genotype, maxNAs = floor(nrow(genotype) * 0.5), propVar = 0.75,
-  phenotype, sampleInfo, scale = T)
+preMap(
+  genotype,
+  maxNAs = floor(nrow(genotype) * 0.5),
+  propVar = 0.75,
+  phenotype,
+  sampleInfo,
+  scale = T
+)
 }
 \arguments{
 \item{genotype}{A binary matrix with strain (rows) X marker (columns)
@@ -45,15 +51,4 @@ Population structure covariates, representing \code{propVar}%
 of genetic variance are generated using emma. Phenotype values
 are optionally scaled and centered. Genotype and phenotype matrices
 are reordered according to the same sample order.
-}
-\examples{
-data("RFQTLgenotype")
-data("RFQTLphenotype")
-sampleInfo <- sapply(strainNames,FUN=function(x){
-   which(rownames(genotype)==x)
-   })
-mappingData <- preMap(genotype=genotype,
-                      phenotype=phenotype,
-                      sampleInfo=sampleInfo,
-                      scale=T)
 }

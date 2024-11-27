@@ -4,8 +4,17 @@
 \alias{rfMapperNonPar}
 \title{Non-parallel RF mapping}
 \usage{
-rfMapperNonPar(mappingData, nTrait = NULL, permutationGroups = NULL,
-  permute, nPermutations = 1000, nforest, ntree, file = NULL, pMat = NULL)
+rfMapperNonPar(
+  mappingData,
+  nTrait = NULL,
+  permutationGroups = NULL,
+  permute,
+  nPermutations = 1000,
+  nforest,
+  ntree,
+  file = NULL,
+  pMat = NULL
+)
 }
 \arguments{
 \item{mappingData}{A list containing all necessary information to

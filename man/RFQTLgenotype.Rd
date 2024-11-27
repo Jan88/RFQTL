@@ -4,9 +4,11 @@
 \name{RFQTLgenotype}
 \alias{RFQTLgenotype}
 \title{Fission yeast genotypes}
-\format{A matrix with 46 rows and 4481 columns: Each 
+\format{
+A matrix with 46 rows and 4481 columns: Each 
 row corresponds to a strain, and each column to 
-a genomic locus. Alleles are encoded as 0 or 1.}
+a genomic locus. Alleles are encoded as 0 or 1.
+}
 \source{
 unpublished data.
 }

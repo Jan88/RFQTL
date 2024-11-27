@@ -4,13 +4,23 @@
 \alias{rfMapper}
 \title{Main function for RF QTL mapping}
 \usage{
-rfMapper(mappingData, nTrait = NULL, permutationGroups = NULL, permute,
-  nPermutations = 1000, nforest, ntree, file = NULL, nCl = 1,
-  clType = "SOCK", pMat = NULL)
+rfMapper(
+  mappingData,
+  nTrait = NULL,
+  permutationGroups = NULL,
+  permute,
+  nPermutations = 1000,
+  nforest,
+  ntree,
+  file = NULL,
+  nCl = 1,
+  clType = "SOCK",
+  pMat = NULL
+)
 }
 \arguments{
 \item{mappingData}{A list containing all necessary information to map
-a trait as returned by \code{preMap}.}
+a trait as returned by preMap.}
 
 \item{nTrait}{If the phenotype in mapping data is a matrix, nTrait 
 specifies which of the multiple traits provided should be mapped.
@@ -18,7 +28,7 @@ Should be a single integer.}
 
 \item{permutationGroups}{Optional; list with an entry for each sample
 indicating within which group it may be permuted. Entries may 
-contain more than one integer. If this is the case, one is chosen
+contain more than one integer. If this is the case one is chosen
 randomly. Samples with the same integer may be permuted. If this
 list is not provided, all samples are assumed to be in the 
 same permutation-group.}
@@ -52,20 +62,4 @@ For unpermuted traits: a numerical vector with importance
 }
 \description{
 Wrapper function for qtl mapping with random forest.
-}
-\examples{
-data("RFQTLgenotype")
-data("RFQTLphenotype")
-sampleInfo <- sapply(strainNames,FUN=function(x){
-   which(rownames(genotype)==x)
-   })
-mappingData <- preMap(genotype=genotype,
-                      phenotype=phenotype,
-                      sampleInfo=sampleInfo,
-                      scale=T)
-library(randomForest)
-scores <- rfMapper(mappingData = mappingData,
-                   permute = F,
-                   nforest = 100,
-                   ntree = 150)
 }

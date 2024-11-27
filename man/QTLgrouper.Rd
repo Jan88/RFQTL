@@ -9,22 +9,20 @@ QTLgrouper(pmat, sigThreshold, corThreshold, distThreshold, genotype, chrVec)
 \arguments{
 \item{pmat}{Matrix with p-values, traits (rows) X loci (columns).}
 
-\item{sigThreshold}{Significance threshold to be applied on the 
-corrected p-values.}
+\item{sigThreshold}{Significance threshold to applied on the p-values.}
 
 \item{corThreshold}{Threshold for absolute correlation values above
-which significant loci are treated as linked to each other. If they 
+which signifcant loci are treated as linked to each other. If they 
 are close they are joined to a single region, otherwise they are 
-grouped together without including loci in between.}
+grouped together without including inbetween loci.}
 
-\item{distThreshold}{Distance threshold; the maximum distance where
-loci containing highly correlated markers, including all markers 
-between them, are joined.}
+\item{distThreshold}{Distance threshold up until which loci containing
+highly correlated markers including all markers in between are linked.}
 
-\item{genotype}{Allele information for all samples (rows) and 
+\item{genotype}{Allele-information for all samples (rows) and 
 markers (columns).}
 
-\item{chrVec}{Character vector indicating the chromosome on which
+\item{chrVec}{Character-vector containing the chromosome on which
 a given marker is located.}
 }
 \value{

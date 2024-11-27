@@ -24,5 +24,5 @@ List of length 2. $nl: matrix with two columns containing
  column two were used somewhere on the right side of the predictors in column 1.
 }
 \description{
-Function that reformats the structure of a RF tree for use in \code{RFepistasis}.
+Function that reformats the structure of a RF tree for use in RFepistasis.
 }

@@ -4,13 +4,23 @@
 \alias{RFepistasis}
 \title{RF epistasis detection}
 \usage{
-RFepistasis(mappingData, markerInds1 = NULL, markerInds2 = NULL,
-  pairMat = NULL, mtry = NULL, ntree = 30000, npermut = 100,
-  nodesize = 5, minTest = 5, nthreads = 1, fullTable = F,
-  Rcutoff = 0.9)
+RFepistasis(
+  mappingData,
+  markerInds1 = NULL,
+  markerInds2 = NULL,
+  pairMat = NULL,
+  mtry = NULL,
+  ntree = 30000,
+  npermut = 100,
+  nodesize = 5,
+  minTest = 5,
+  nthreads = 1,
+  fullTable = F,
+  Rcutoff = 0.9
+)
 }
 \arguments{
-\item{mappingData}{Dataset that was prepared with \code{preMap}.}
+\item{mappingData}{Dataset that was prepared with the function preMap.}
 
 \item{markerInds1, markerInds2}{The indices of the markers that should 
 be tested for interaction. All markers in markerInds1 will be tested 
@@ -25,14 +35,14 @@ as candidates at each split. Will be passed on to the Random Forest
 algorithm. Default is a third of the number of markers.}
 
 \item{ntree}{Total number of trees. Defaults to 30000. More trees
-lead to higher detection power.}
+lead to higher power.}
 
 \item{npermut}{Number of different imputations that should
 be created in the case of missing genotypes. ntree should
  be a multiple of npermut. Defaults to 100.}
 
 \item{nodesize}{Minimum size of terminal nodes. Setting 
-this number to larger values causes shallower trees to be grown 
+this number larger causes smaller trees to be grown 
 (and thus take less time). Default is 5.}
 
 \item{minTest}{Minimal number of slopes that need to be 
@@ -61,22 +71,10 @@ Table with the marker pair indices and their
  frequencies, and ungrouped p-values.
 }
 \description{
-Function that detects epistasis between markers using random forest. 
-For details see https://www.biorxiv.org/content/early/2018/06/21/353193.
+function that detects epistasis between markers using random forest. 
+For details see https://www.biorxiv.org/content/early/2018/06/21/353193
 Note that all submitted markers in mappingData will be used to build the RF. 
 The parameters markerInds1 and markerInds2, or pairMat can be used to
 restrict interaction testing to a subset of marker pairs. If neither
 of them are specified, all markers are tested.
-}
-\examples{
-data("RFQTLgenotype") 
-data("RFQTLphenotype")
-sampleInfo <- sapply(strainNames,FUN=function(x){
-   which(rownames(genotype)==x)
-})
-mappingData <- preMap(genotype=genotype,
-                      phenotype=phenotype,
-                      sampleInfo=sampleInfo,
-                      scale=T)
-res <- RFepistasis(mappingData)
 }

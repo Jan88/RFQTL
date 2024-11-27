@@ -4,15 +4,19 @@
 \alias{writeQTL}
 \title{Write .qtl file}
 \usage{
-writeQTL(QTLlist, traitNames = NULL, path, markerPositions = NULL,
-  digits = NULL)
+writeQTL(
+  QTLlist,
+  traitNames = NULL,
+  path,
+  markerPositions = NULL,
+  digits = NULL
+)
 }
 \arguments{
-\item{QTLlist}{QTL stored as a list-object as returned by \code{QTLgrouper}.}
+\item{QTLlist}{QTL stored as a list-object as returned by QTLgrouper.}
 
 \item{traitNames}{Optional; a vector with names for the traits 
-which correspond to the rows in the p-value matrix 
-used for \code{QTLgrouper}.}
+which correspond to the rows in the p-value matrix used for QTLgrouper.}
 
 \item{path}{Complete filepath ending in .qtl, specifying where 
 the results should be saved.}
@@ -24,7 +28,7 @@ specifying the chromosome, start and end for each marker.}
 convention and can be rounded according to digits.}
 }
 \value{
-The output is written in a file, specified by \code{path}.
+The output is written in a file, specified by path.
 }
 \description{
 Writes a QTL-list to a .qtl file as a table.

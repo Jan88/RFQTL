@@ -16,6 +16,6 @@ List with one vector for each marker. The first element
  indices of any missing values for the respective samples.
 }
 \description{
-Function that calculates the allele frequencies (of the possible 
-alleles 1 or 0) for each marker (column) and identifies missing values.
+Function that calculates the allele frequencies (1 or 0) for 
+each marker (column) and identifies missing values.
 }

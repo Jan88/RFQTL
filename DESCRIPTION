@@ -8,4 +8,4 @@ Maintainer: Jan Grossbach <jan.grossbach@uni-koeln.de>
 Description: The association between genetic variants and a phenotype is evaluated by explaining differences in phenotype values between different genotypes through their genetic differences in a Random Forest model. The significance of these associations is determined through generating empirical null distribution. QTL regions are called from these results. This package includes all necessary methods to acomplish these tasks. It also includes functions to detect epistatic interactions in a Random Forest, for details see https://www.biorxiv.org/content/early/2018/06/21/353193.
 License: GPL-2
 LazyData: true
-RoxygenNote: 6.0.1
+RoxygenNote: 7.3.2
